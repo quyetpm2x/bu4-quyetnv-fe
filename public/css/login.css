@@ -1,0 +1,284 @@
+.register {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.z2 {
+    z-index: 2;
+}
+
+.acount-sign-footer {
+    margin-top: 20px;
+    color:black;
+    font-size: 16px;
+}
+
+.row-0 {
+    margin: 0;
+}
+
+.is-flex {
+    display: flex;
+}
+
+.welcome {
+    background: var(--bg-section);
+    padding: 48px 0;
+    color: #fff;
+}   
+
+.welcome-content {
+    padding: 0 53px;
+    margin: 0 45px;
+}
+
+.welcome-title {
+    line-height:36px;
+    margin-bottom: 10px;
+    font-size: 26px;
+    font-weight: 900;
+}
+
+.welcome-desc {
+    font-size: 20px;
+    line-height: 26px;
+}
+
+.section-container {
+    margin: 0 45px;
+    padding: 0 45px;
+}
+
+.pad-04 {
+    padding: 0 8px;
+}
+
+.media {
+    margin: 48px 5px 0;
+}
+
+.media__title {
+    margin: 24px 0 14px;
+    font-size: 20px;
+    line-height: 23px;
+}
+
+.media__content {
+    color: #555;
+    font-size: 17px;
+    line-height: 24px;
+}
+::-webkit-input-placeholder {
+    color: black;
+    font-family: inherit;
+    font-weight: normal;
+    font-size: 14px;
+    opacity: 0.6;
+}
+
+.signUpForm {
+    padding: 0 8px;
+    display: flex;
+    justify-content: flex-end;
+    /* margin: 10vh 0; */
+    position: absolute;
+    /* top: 0; */
+}
+
+.background {
+    background-image: url("../images/hust.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;  
+    width: 100vw;
+    height: 100vh;  
+    filter: blur(5px);
+}
+
+.acount {
+    padding: 32px;
+    background: #fff;
+    box-shadow: 0 9px 46px 8px rgb(0 0 0 / 2%), 0 24px 38px 3px rgb(0 0 0 / 4%), 0 11px 15px -7px rgb(0 0 0 / 5%);
+    border-radius: 10px;
+    width: 421px;
+    position: absolute;
+}
+
+.acount__title {
+    font-size: 24px;
+    margin-bottom: 32px;
+    line-height: 30px;
+}
+
+.input-group__label {
+    line-height: 24px;
+    font-size: 15.5px;
+    font-weight: bold;
+}
+
+.input-group {
+    margin: 16px 0;
+}
+
+.input-group-input {
+    height: 48px;
+    position: relative;
+}
+
+.input-group-input input {
+    border: 1px solid #e6e6e6;
+    transition: all .3s;
+    font-size: 14px;
+    padding: 8px 20px;
+    width: 100%;
+    height: 100%;
+    border-radius: 3rem;
+    margin-top: 8px;
+}
+
+.input-group-input span{
+    position: absolute;
+    top: 22px;
+    right: 15px;
+    color: #d2d2d2;
+}
+.input-group-input span i {
+    font-size: 16px;
+}
+
+.update-phone {
+    display: flex;
+    align-items: center;
+}
+
+.country-phone {
+    margin-right: 16px;
+    margin-top: 18px;
+    height: 48px;  
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f6f6f6;
+    border-radius: 3rem;
+}
+
+.country-phone .flag-wrapper {
+    width: 120px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.flag-wrapper img {
+    width: 20px;
+    margin-right: 6px;
+}
+
+.flag-wrapper span {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.acount-footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.acount-body button {
+    width: 100%;
+    height: 56px;
+    padding: 0 30px;
+    margin-top: 32px;
+    border: none;
+    box-shadow: 0 4px 12px 0 rgb(246 116 57 / 40%);
+    background-image: var(--bg-section);
+    background-size: 200% auto;
+    border-radius: 27px;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.acount-body button:hover{
+    background-image: linear-gradient(to right, #8d4fff, #fa9e1b);
+}
+
+.acount-footer button:hover {
+    background-position: 100%;
+}
+
+.acount-footer .acount-sign-up {
+    font-size: 17px;
+    margin-top: 32px;
+}
+
+.acount-footer .sign-up {
+    color: var(--hover-color);
+    font-weight: bold;
+    color: red;
+}
+
+.acount-footer-note {
+    margin-top: 32px;
+    font-size: 15px;
+    text-align: center;
+}
+
+.acount-footer-note a {
+    text-decoration: none;
+    color: var(--black-color);
+    font-weight: 700;
+    opacity: 0.8;
+    transition: all 0.3s;
+}
+
+.acount-footer-note a:hover {
+    color: var(--hover-color);
+}
+
+.sign-in-social {
+    margin-top: 32px;
+    width: 100%;
+}
+
+.sign-in-social-social{
+    width: 100%;
+    height: 56px;
+    padding: 0 30px;
+    margin-top: 16px;
+    border-radius: 3rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 16px;
+    border: 1px solid #e6e6e6;
+    color: #555;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.sign-in-social__icon {
+    width: 26px;
+    height: 26px;
+    position: absolute;
+    right: 2rem;
+    font-size: 26px;
+}
+
+.signInForm {
+    padding: 0 8px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.flex-wrap {
+    display: flex;
+    flex-wrap: wrap;
+}
