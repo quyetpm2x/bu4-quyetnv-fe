@@ -95,7 +95,7 @@ body {
 }
 
 .header__topbar__container .row {
-    justify-content: space-between;
+    justify-content: flex-end;
 }
 
 .header__topbar__container--contacts span {

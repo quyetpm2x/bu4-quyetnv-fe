@@ -1,18 +1,11 @@
+.login {
+    padding: 79px 0 80px;
+    border-bottom: 1px solid var(--border-color);
+}
+
 .register {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.z2 {
-    z-index: 2;
-}
-
-.acount-sign-footer {
-    margin-top: 20px;
-    color:black;
-    font-size: 16px;
+    padding: 79px 0 80px;
+    border-bottom: 1px solid var(--border-color);
 }
 
 .row-0 {
@@ -82,27 +75,15 @@
     padding: 0 8px;
     display: flex;
     justify-content: flex-end;
-    /* margin: 10vh 0; */
-    position: absolute;
-    /* top: 0; */
-}
-
-.background {
-    background-image: url("../images/hust.jpg");
-    background-repeat: no-repeat;
-    background-size: cover;  
-    width: 100vw;
-    height: 100vh;  
-    filter: blur(5px);
 }
 
 .acount {
     padding: 32px;
+    margin-top: -110px;
     background: #fff;
     box-shadow: 0 9px 46px 8px rgb(0 0 0 / 2%), 0 24px 38px 3px rgb(0 0 0 / 4%), 0 11px 15px -7px rgb(0 0 0 / 5%);
     border-radius: 10px;
     width: 421px;
-    position: absolute;
 }
 
 .acount__title {
@@ -221,7 +202,6 @@
 .acount-footer .sign-up {
     color: var(--hover-color);
     font-weight: bold;
-    color: red;
 }
 
 .acount-footer-note {
