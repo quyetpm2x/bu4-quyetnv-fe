@@ -8,14 +8,16 @@ import AuthContextProvider from "./contexts/authContext";
 import ProtectedRoute from './components/routing/protectedRoute';
 import Landing from './components/layout/landing';
 import Home from "./components/home";
+import { useState } from "react";
 
 function App() {
+  const [wallet, setWallet] = useState('');
   return (
     <AuthContextProvider>
       <Router>
         <Routes>
           {/* <Route path='/' element={<Landing />}  exact/> */}
-          <Route path='/home' element={<Home />} exact/>
+          <Route path='/home' element={<Home wallet={wallet} setWallet={setWallet} />} exact/>
           {/* <Route path='/login' element={<Login />} exact/>
           <Route path='/register' element={<Login />} exact/> */}
 

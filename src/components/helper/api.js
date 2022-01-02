@@ -12,4 +12,9 @@ export const updateWallet = async (wallet) => {
     return response.data;
 }
 
+export const updateContractAddress = async (contractAddress) => {
+    const response = await axiosInstance.patch('/issuers', {contractAddress: contractAddress});
+    return response.data;
+}
+
 

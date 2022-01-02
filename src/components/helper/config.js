@@ -8,7 +8,7 @@ export const axiosInstance = axios.create({
   responseType: 'json',
   headers: {
     'Content-Type': 'application/json',
-    'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imh1c3RAZ21haWwuY29tIiwiaXNzdWVySWQiOiI2MWJkZjYxYTQwODBkMDQ4MGQyMzE0ZmIiLCJyb2xlcyI6WzFdLCJpYXQiOjE2NDExMzE1NzgsImV4cCI6MTY0MTEzNTE3OH0.ZAjkyWrqry3lR845_az8dHZzi3vsyGuq2amVYAiWjVg`,
+    'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImhpZXV2dWJrMjE3QGdtYWlsLmNvbSIsImlzc3VlcklkIjoiNjFkMWM5MDhmMGExM2E0NWE2Njk3MjdkIiwicm9sZXMiOlsxXSwiaWF0IjoxNjQxMTM4NDQ0LCJleHAiOjE2NDExNDIwNDR9.7kJOEiwY2lrMQycz8O9Xn8LNw0GSndU3qAUjoKq0wGQ`,
   },
 }); 
 
