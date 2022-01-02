@@ -1,12 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+const { getIssuer } = require('./helper/api');
+const  { isWalletRegisted, connectMetaMask } = require("./helper/ultis");
 
 const Home = () => {
+
+  const [isConnected, setIsConnected] = useState(false);
+  const issuer = async () => {
+    return await getIssuer();
+  }
+
+  const connectWallet = async () => {
+    const wallet = await connectMetaMask();
+    if(wallet) {
+      setIsConnected(true);
+    }
+  }
+
   return (
     <>
       <div id="mySidenav" class="sidenav">
         <p class="logo">
-          M-SoftTech <span class="menu">&#9776;</span>
+        M-SoftTech <span class="menu">&#9776;</span>
         </p>
         <p class="logo1">
           {" "}
@@ -69,22 +84,14 @@ const Home = () => {
               </p>
             </div>
             <div class="profile">
-              <img src="images/user.png" class="pro-img" />
-              <p>
-                Manoj Adhikari{" "}
-                <i class="fa fa-ellipsis-v dots" aria-hidden="true"></i>
-              </p>
-              <div class="profile-div">
-                <p>
-                  <i class="fa fa-user"></i> Profile
-                </p>
-                <p>
-                  <i class="fa fa-cogs"></i> Settings
-                </p>
-                <p>
-                  <i class="fa fa-power-off"></i> Log Out
-                </p>
-              </div>
+              <button className="acount-btn" onClick={async () => {
+                console.log('connect');
+                if(!isConnected) {
+                  await connectWallet();
+                }
+              }}>
+                {isConnected ? 'Connected' : 'Connect Wallet'}
+              </button>
             </div>
           </div>
           <div class="clearfix"></div>
