@@ -1,12 +1,74 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+const { getIssuer, updateContractAddress } = require('./helper/api');
+const  { isWalletRegisted, connectMetaMask, registWallet, deployDocumentStore } = require("./helper/ultis");
 
-const Home = () => {
+const Home = (props) => {
+
+  const [isConnected, setIsConnected] = useState(false);
+  const [isDeployed, setIsDeployed] = useState(false);
+  const [issuer, setIssuer] = useState({});
+  
+  useEffect( async () => {
+     const deployed = await checkContractDeploy();
+     const issuer = await getIssuer();
+     setIssuer(issuer);
+     setIsDeployed(deployed);
+     await handleChangeWalletAccount();
+  }, []);
+
+  useEffect( async () => {
+    const issuer = await getIssuer();
+    setIssuer(issuer);
+ }, [isDeployed]);
+
+  // useEffect(async () => {
+  //   await connectWallet();
+  // }, [window.ethereum.currentProvider]);
+
+  console.log(issuer);
+
+  const connectWallet = async () => {
+    let wallet;
+    const issuer = await getIssuer();
+    if(issuer.owner) {
+      wallet = await connectMetaMask();
+    } else {
+      
+      wallet = await registWallet();
+    }
+    if(wallet) {
+      setIsConnected(true);
+      props.setWallet(wallet);
+    } else {
+      setIsConnected(false);
+    }
+  };
+
+  const handleChangeWalletAccount = async () => {
+    window.ethereum.on("accountsChanged", async function() {
+      // Time to reload your interface with accounts[0]!
+      await connectWallet();
+    });
+  }
+
+  const checkContractDeploy = async () => {
+    const issuer = await getIssuer();
+    return issuer.contractAddress;
+  }
+
+  const deployContract = async () => {
+    const store = await deployDocumentStore(props.wallet);
+    await updateContractAddress(store);
+    setIsDeployed(true);
+    console.log(store);
+  }
+
   return (
     <>
       <div id="mySidenav" class="sidenav">
         <p class="logo">
-          M-SoftTech <span class="menu">&#9776;</span>
+        M-SoftTech <span class="menu">&#9776;</span>
         </p>
         <p class="logo1">
           {" "}
@@ -69,22 +131,14 @@ const Home = () => {
               </p>
             </div>
             <div class="profile">
-              <img src="images/user.png" class="pro-img" />
-              <p>
-                Manoj Adhikari{" "}
-                <i class="fa fa-ellipsis-v dots" aria-hidden="true"></i>
-              </p>
-              <div class="profile-div">
-                <p>
-                  <i class="fa fa-user"></i> Profile
-                </p>
-                <p>
-                  <i class="fa fa-cogs"></i> Settings
-                </p>
-                <p>
-                  <i class="fa fa-power-off"></i> Log Out
-                </p>
-              </div>
+              <button className="acount-btn" onClick={async () => {
+                console.log('connect');
+                if(!isConnected) {
+                  await connectWallet();
+                }
+              }}>
+                {isConnected ? 'Connected' : 'Connect Wallet'}
+              </button>
             </div>
           </div>
           <div class="clearfix"></div>
@@ -95,8 +149,19 @@ const Home = () => {
 
         <div class="col-div-4-1">
           <div class="box">
-            <p class="head-1">Sales</p>
-            <p class="number">67343</p>
+            <p class="head-1">{issuer.name}</p>
+            {
+              isDeployed ? (
+                <p class="number">{issuer.contractAddress }</p>
+              ) : (
+                <button className="acount-btn" onClick={async () => {
+                  await deployContract(props.wallet);
+                }}>
+                  Deploy your  contract
+                </button>
+              )
+            }
+            
             <p class="percent">
               <i class="fa fa-long-arrow-up" aria-hidden="true"></i> 5.674%{" "}
               <span>Since Last Months</span>
