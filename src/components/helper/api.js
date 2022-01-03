@@ -37,4 +37,14 @@ export const getBatches = async () => {
     return response.data;
 }
 
+export const verifyJson = async (verifyObject) => { 
+    try {
+        const response = await axiosInstance.post('/certs/verify', verifyObject);
+        return response.data;
+    } catch(err) {
+        throw err;
+    }
+    
+}
+
 
