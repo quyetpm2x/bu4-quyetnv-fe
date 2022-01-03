@@ -17,4 +17,24 @@ export const updateContractAddress = async (contractAddress) => {
     return response.data;
 }
 
+export const updateDeployTransaction = async (contractAddress, transactionHash, block) => {
+    const response = await axiosInstance.post('/transactions', {
+        hash: transactionHash,
+        contractAddress: contractAddress,
+        block: block,
+        action: 3,
+    })
+    return response.data;
+}
+
+export const getHistory = async () => {
+    const response = await axiosInstance.get('/transactions/list');
+    return response.data;
+}
+
+export const getBatches = async () => {
+    const response = await axiosInstance.get('/certs/batches');
+    return response.data;
+}
+
 
