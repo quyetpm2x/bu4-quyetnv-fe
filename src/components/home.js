@@ -1,43 +1,46 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-const { getIssuer, updateContractAddress } = require('./helper/api');
-const  { isWalletRegisted, connectMetaMask, registWallet, deployDocumentStore } = require("./helper/ultis");
+import React, { useEffect, useState } from 'react';
+import { act } from 'react-dom/cjs/react-dom-test-utils.production.min';
+import { Link } from 'react-router-dom';
+import { formatActivity } from './helper/format';
+const { getIssuer, updateContractAddress, updateDeployTransaction, getHistory, getBatches } = require('./helper/api');
+const { isWalletRegisted, connectMetaMask, registWallet, deployDocumentStore, issueDocument } = require('./helper/ultis');
+const { formatBatchStatus } = require('./helper/format');
 
 const Home = (props) => {
-
   const [isConnected, setIsConnected] = useState(false);
   const [isDeployed, setIsDeployed] = useState(false);
   const [issuer, setIssuer] = useState({});
-  
-  useEffect( async () => {
-     const deployed = await checkContractDeploy();
-     const issuer = await getIssuer();
-     setIssuer(issuer);
-     setIsDeployed(deployed);
-     await handleChangeWalletAccount();
-  }, []);
+  const [history, setHistory] = useState([]);
+  const [batches, setBatches] = useState([]);
 
-  useEffect( async () => {
+  useEffect(async () => {
+    const deployed = await checkContractDeploy();
     const issuer = await getIssuer();
     setIssuer(issuer);
- }, [isDeployed]);
+    setIsDeployed(deployed);
+    await handleChangeWalletAccount();
+    await getHistoryActions();
+    await getAllBatches();
+  }, []);
+
+  //   useEffect( async () => {
+  //     const issuer = await getIssuer();
+  //     setIssuer(issuer);
+  //  }, [isDeployed]);
 
   // useEffect(async () => {
   //   await connectWallet();
   // }, [window.ethereum.currentProvider]);
 
-  console.log(issuer);
-
   const connectWallet = async () => {
     let wallet;
     const issuer = await getIssuer();
-    if(issuer.owner) {
+    if (issuer.owner) {
       wallet = await connectMetaMask();
     } else {
-      
       wallet = await registWallet();
     }
-    if(wallet) {
+    if (wallet) {
       setIsConnected(true);
       props.setWallet(wallet);
     } else {
@@ -46,32 +49,49 @@ const Home = (props) => {
   };
 
   const handleChangeWalletAccount = async () => {
-    window.ethereum.on("accountsChanged", async function() {
+    window.ethereum.on('accountsChanged', async function () {
       // Time to reload your interface with accounts[0]!
       await connectWallet();
     });
-  }
+  };
 
   const checkContractDeploy = async () => {
     const issuer = await getIssuer();
     return issuer.contractAddress;
-  }
+  };
 
   const deployContract = async () => {
-    const store = await deployDocumentStore(props.wallet);
-    await updateContractAddress(store);
+    const data = await deployDocumentStore(props.wallet);
+    await updateContractAddress(data.contractAddress);
+    await updateDeployTransaction(data.contractAddress, data.transactionHash, data.block);
     setIsDeployed(true);
-    console.log(store);
+  };
+
+  const getHistoryActions = async () => {
+    const actions = await getHistory();
+    setHistory(actions);
+  };
+
+  const getAllBatches = async () => {
+    const data = await getBatches();
+    setBatches(data);
+  }
+
+  const issue = async (merkleRoot) => {
+    const tx = await issueDocument(merkleRoot, issuer.contractAddress, issuer.owner);
+    await getHistoryActions();
+    await getAllBatches();
+    console.log(tx);
   }
 
   return (
     <>
       <div id="mySidenav" class="sidenav">
         <p class="logo">
-        M-SoftTech <span class="menu">&#9776;</span>
+          M-SoftTech <span class="menu">&#9776;</span>
         </p>
         <p class="logo1">
-          {" "}
+          {' '}
           <span class="menu1">&#9776;</span>
         </p>
         <a href="# " class="icon-a">
@@ -131,12 +151,14 @@ const Home = (props) => {
               </p>
             </div>
             <div class="profile">
-              <button className="acount-btn" onClick={async () => {
-                console.log('connect');
-                if(!isConnected) {
-                  await connectWallet();
-                }
-              }}>
+              <button
+                className="acount-btn"
+                onClick={async () => {
+                  if (!isConnected) {
+                    await connectWallet();
+                  }
+                }}
+              >
                 {isConnected ? 'Connected' : 'Connect Wallet'}
               </button>
             </div>
@@ -150,47 +172,45 @@ const Home = (props) => {
         <div class="col-div-4-1">
           <div class="box">
             <p class="head-1">{issuer.name}</p>
-            {
-              isDeployed ? (
-                <p class="number">{issuer.contractAddress }</p>
-              ) : (
-                <button className="acount-btn" onClick={async () => {
+            {isDeployed ? (
+              <p class="number">{issuer.contractAddress}</p>
+            ) : (
+              <button
+                className="acount-btn"
+                onClick={async () => {
                   await deployContract(props.wallet);
-                }}>
-                  Deploy your  contract
-                </button>
-              )
-            }
-            
+                }}
+              >
+                Deploy your contract
+              </button>
+            )}
+
             <p class="percent">
-              <i class="fa fa-long-arrow-up" aria-hidden="true"></i> 5.674%{" "}
-              <span>Since Last Months</span>
+              <i class="fa fa-long-arrow-up" aria-hidden="true"></i> 5.674% <span>Since Last Months</span>
             </p>
             <i class="fa fa-line-chart box-icon"></i>
           </div>
         </div>
-        <div class="col-div-4-1">
+        {/* <div class="col-div-4-1">
           <div class="box">
             <p class="head-1">purchases</p>
             <p class="number">2343</p>
-            <p class="percent" style={{color: "red !important"}}>
-              <i class="fa fa-long-arrow-down" aria-hidden="true"></i> 5.64%{" "}
-              <span>Since Last Months</span>
+            <p class="percent" style={{ color: 'red !important' }}>
+              <i class="fa fa-long-arrow-down" aria-hidden="true"></i> 5.64% <span>Since Last Months</span>
             </p>
             <i class="fa fa-circle-o-notch box-icon"></i>
           </div>
-        </div>
-        <div class="col-div-4-1">
+        </div> */}
+        {/* <div class="col-div-4-1">
           <div class="box">
             <p class="head-1">orders</p>
             <p class="number">35343</p>
             <p class="percent">
-              <i class="fa fa-long-arrow-up" aria-hidden="true"></i> 5.674%{" "}
-              <span>Since Last Months</span>
+              <i class="fa fa-long-arrow-up" aria-hidden="true"></i> 5.674% <span>Since Last Months</span>
             </p>
             <i class="fa fa-shopping-bag box-icon"></i>
           </div>
-        </div>
+        </div> */}
 
         <div class="clearfix"></div>
         <br />
@@ -200,32 +220,30 @@ const Home = (props) => {
             <div class="content-box-1">
               <p class="head-1">Overview</p>
               <br />
-              <div class="m-box active">
-                <p>
-                  Member Profit
-                  <br />
-                  <span class="no-1">Last Months</span>
-                </p>
-                <span class="no">+2343</span>
-              </div>
-
-              <div class="m-box">
-                <p>
-                  Member Profit
-                  <br />
-                  <span class="no-1">Last Months</span>
-                </p>
-                <span class="no">+2343</span>
-              </div>
-
-              <div class="m-box">
-                <p>
-                  Member Profit
-                  <br />
-                  <span class="no-1">Last Months</span>
-                </p>
-                <span class="no">+2343</span>
-              </div>
+              {
+                batches.map((batch) => {
+                  return (
+                    <div class="m-box active">
+                      <p>
+                        {batch.merkleRoot}
+                        <br />
+                        <span class="no-1">{formatBatchStatus(batch.status)}</span>
+                      </p>
+                      {batch.status === 1 && (
+                        <button
+                          className="acount-btn"
+                          onClick={async () => {
+                            await issue(batch.merkleRoot);
+                          }}
+                        >
+                          Issue Documents
+                        </button>
+                      )}
+                      
+                    </div>
+                  )
+                })
+              }
             </div>
           </div>
         </div>
@@ -254,27 +272,22 @@ const Home = (props) => {
           <div class="box-1">
             <div class="content-box-1">
               <p class="head-1">
-                Acitivity <span>View All</span>
+                Activites <span>View All</span>
               </p>
               <br />
-              <p class="act-p">
-                <i class="fa fa-circle"></i> Lorem Ipsum is simply dummy text of
-                the printing and typesetting industry.{" "}
-              </p>
-              <p class="act-p">
-                <i class="fa fa-circle" style={{color:"red!important"}}></i> Lorem
-                Ipsum is simply dummy text of the
-                printing and typesetting industry.{" "}
-              </p>
-              <p class="act-p">
-                <i class="fa fa-circle" style={{color:"green!important"}}></i>{" "}
-                Lorem Ipsum is simply dummy text of the
-                printing and typesetting industry.{" "}
-              </p>
-              <p class="act-p">
-                <i class="fa fa-circle"></i> Lorem Ipsum is simply dummy text of
-                the printing and typesetting industry.{" "}
-              </p>
+              {history.map((activity) => {
+                console.log(activity);
+                return (
+                  <a
+                    class="act-p"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href={`https://testnet.bscscan.com/tx/${activity.hash}`}
+                  >
+                    <i class="fa fa-circle"></i> {formatActivity(activity.action)}
+                  </a>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -290,10 +303,14 @@ const Home = (props) => {
               <br />
               <table>
                 <tr>
-                  <th>Company</th>
-                  <th>Contact</th>
-                  <th>Country</th>
+                  <th>Student Id</th>
+                  <th>Name</th>
+                  <th>Date of birth</th>
+                  <th>Study mode</th>
+                  <th>Classification</th>
+                  <th>Year</th>
                 </tr>
+                
                 <tr>
                   <td>Alfreds Futterkiste</td>
                   <td>Maria Anders</td>
