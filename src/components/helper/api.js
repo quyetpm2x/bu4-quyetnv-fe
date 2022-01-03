@@ -37,6 +37,11 @@ export const getBatches = async () => {
     return response.data;
 }
 
+export const getCerts = async () => {
+    const response = await axiosInstance.get('/certs/list');
+    return response.data;
+}
+
 export const verifyJson = async (verifyObject) => { 
     try {
         const response = await axiosInstance.post('/certs/verify', verifyObject);
@@ -45,6 +50,11 @@ export const verifyJson = async (verifyObject) => {
         throw err;
     }
     
+}
+
+export const revokeData = async (studentIds) => {
+    const response = await axiosInstance.post('/certs/revoke', studentIds);
+    return response.data;
 }
 
 

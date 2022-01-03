@@ -2,8 +2,23 @@ import React, { useEffect, useState } from 'react';
 import { act } from 'react-dom/cjs/react-dom-test-utils.production.min';
 import { Link } from 'react-router-dom';
 import { formatActivity } from './helper/format';
-const { getIssuer, updateContractAddress, updateDeployTransaction, getHistory, getBatches } = require('./helper/api');
-const { isWalletRegisted, connectMetaMask, registWallet, deployDocumentStore, issueDocument } = require('./helper/ultis');
+const {
+  getIssuer,
+  updateContractAddress,
+  updateDeployTransaction,
+  getHistory,
+  getBatches,
+  getCerts,
+  revokeData,
+} = require('./helper/api');
+const {
+  isWalletRegisted,
+  connectMetaMask,
+  registWallet,
+  deployDocumentStore,
+  issueDocument,
+  revokeDocument,
+} = require('./helper/ultis');
 const { formatBatchStatus } = require('./helper/format');
 
 const Home = (props) => {
@@ -12,6 +27,8 @@ const Home = (props) => {
   const [issuer, setIssuer] = useState({});
   const [history, setHistory] = useState([]);
   const [batches, setBatches] = useState([]);
+  const [certs, setCerts] = useState([]);
+  const [selected, setSelected] = useState([]);
 
   useEffect(async () => {
     const deployed = await checkContractDeploy();
@@ -21,6 +38,7 @@ const Home = (props) => {
     await handleChangeWalletAccount();
     await getHistoryActions();
     await getAllBatches();
+    await getAllCerts();
   }, []);
 
   //   useEffect( async () => {
@@ -75,14 +93,41 @@ const Home = (props) => {
   const getAllBatches = async () => {
     const data = await getBatches();
     setBatches(data);
-  }
+  };
+
+  const getAllCerts = async () => {
+    const data = await getCerts();
+    data.map((cert) => {
+      cert.checked = false;
+      selected.push(cert);
+    });
+    setCerts(data);
+  };
+
+  console.log(selected);
 
   const issue = async (merkleRoot) => {
     const tx = await issueDocument(merkleRoot, issuer.contractAddress, issuer.owner);
     await getHistoryActions();
     await getAllBatches();
-    console.log(tx);
-  }
+  };
+
+  const handleCheckBox = (key) => {
+    const checkedList = selected;
+    checkedList[key].checked = !checkedList[key].checked;
+    setSelected(checkedList);
+  };
+
+  const revoke = async () => {
+    const studentIds = [];
+    selected.map((cert) => {
+      if (cert.checked) {
+        studentIds.push(cert.studentId);
+      }
+    });
+    const merkleRoot = await revokeData(studentIds);
+    await revokeDocument(merkleRoot, issuer.contractAddress, issuer.owner);
+  };
 
   return (
     <>
@@ -220,30 +265,27 @@ const Home = (props) => {
             <div class="content-box-1">
               <p class="head-1">Overview</p>
               <br />
-              {
-                batches.map((batch) => {
-                  return (
-                    <div class="m-box active">
-                      <p>
-                        {batch.merkleRoot}
-                        <br />
-                        <span class="no-1">{formatBatchStatus(batch.status)}</span>
-                      </p>
-                      {batch.status === 1 && (
-                        <button
-                          className="acount-btn"
-                          onClick={async () => {
-                            await issue(batch.merkleRoot);
-                          }}
-                        >
-                          Issue Documents
-                        </button>
-                      )}
-                      
-                    </div>
-                  )
-                })
-              }
+              {batches.map((batch) => {
+                return (
+                  <div class="m-box active">
+                    <p>
+                      {batch.merkleRoot}
+                      <br />
+                      <span class="no-1">{formatBatchStatus(batch.status)}</span>
+                    </p>
+                    {batch.status === 1 && (
+                      <button
+                        className="acount-btn"
+                        onClick={async () => {
+                          await issue(batch.merkleRoot);
+                        }}
+                      >
+                        Issue Documents
+                      </button>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -276,7 +318,6 @@ const Home = (props) => {
               </p>
               <br />
               {history.map((activity) => {
-                console.log(activity);
                 return (
                   <a
                     class="act-p"
@@ -298,7 +339,18 @@ const Home = (props) => {
           <div class="box-8">
             <div class="content-box">
               <p>
-                Top Selling Projects <span>Sell All</span>
+                Top Selling Projects{' '}
+                <span
+                >
+                  <button
+                    className="acount-btn"
+                    onClick={async () => {
+                      await revoke();
+                    }}
+                  >
+                    Revoke
+                  </button>
+                </span>
               </p>
               <br />
               <table>
@@ -309,38 +361,31 @@ const Home = (props) => {
                   <th>Study mode</th>
                   <th>Classification</th>
                   <th>Year</th>
+                  <th>Check</th>
                 </tr>
-                
-                <tr>
-                  <td>Alfreds Futterkiste</td>
-                  <td>Maria Anders</td>
-                  <td>Germany</td>
-                </tr>
-                <tr>
-                  <td>Centro comercial Moctezuma</td>
-                  <td>Francisco Chang</td>
-                  <td>Mexico</td>
-                </tr>
-                <tr>
-                  <td>Ernst Handel</td>
-                  <td>Roland Mendel</td>
-                  <td>Austria</td>
-                </tr>
-                <tr>
-                  <td>Island Trading</td>
-                  <td>Helen Bennett</td>
-                  <td>UK</td>
-                </tr>
-                <tr>
-                  <td>Ernst Handel</td>
-                  <td>Roland Mendel</td>
-                  <td>Austria</td>
-                </tr>
-                <tr>
-                  <td>Island Trading</td>
-                  <td>Helen Bennett</td>
-                  <td>UK</td>
-                </tr>
+                {selected.map((cert, key) => {
+                  return (
+                    <tr>
+                      <th>{cert.studentId}</th>
+                      <th>{cert.name}</th>
+                      <th>{cert.dob}</th>
+                      <th>{cert.studyMode}</th>
+                      <th>{cert.classification}</th>
+                      <th>{cert.graduatedYear}</th>
+                      <th>
+                        <label>
+                          <input
+                            type="checkbox"
+                            defaultChecked={cert.checked}
+                            onChange={() => {
+                              handleCheckBox(key);
+                            }}
+                          />
+                        </label>
+                      </th>
+                    </tr>
+                  );
+                })}
               </table>
             </div>
           </div>

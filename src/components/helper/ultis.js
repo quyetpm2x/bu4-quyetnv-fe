@@ -48,3 +48,10 @@ export const issueDocument = async (merkleRoot, contractAddress, publicKey) => {
   const tx = await documentStore.methods.issue(merkleRoot).send({ from: publicKey });
   return tx.transactionHash;
 };
+
+export const revokeDocument = async (merkleRoot, contractAddress, publicKey) => {
+  window.web3 = new Web3(window.web3.currentProvider);
+  const documentStore = new window.web3.eth.Contract(DocumentStoreAbi, contractAddress);
+  const tx = await documentStore.methods.revoke(merkleRoot).send({ from: publicKey });
+  return tx.transactionHash;
+}
