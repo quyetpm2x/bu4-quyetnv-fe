@@ -17,4 +17,9 @@ export const updateContractAddress = async (contractAddress) => {
     return response.data;
 }
 
+export const wrapData = async (data) => {
+    const reponse = await axiosInstance.post('/certs/wrap', {certs: data});
+    return reponse.data;
+}
+
 

@@ -184,7 +184,7 @@ const Login = () => {
                           </a>
                         </div>
                         <div className="acount-sign-up">
-                          Bạn chưa có tài khoản Travel?
+                          Bạn chưa có tài khoản B4U?
                           <Link
                             to="/register"
                             style={{ textDecoration: "none" }}
