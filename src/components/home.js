@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { act } from 'react-dom/cjs/react-dom-test-utils.production.min';
-import { Link } from 'react-router-dom';
-import { formatActivity } from './helper/format';
-import { wrapData } from '../components/helper/api';
-import * as XLSX from 'xlsx';
+import React, { useEffect, useState } from "react";
+import { act } from "react-dom/cjs/react-dom-test-utils.production.min";
+import { Link } from "react-router-dom";
+import { formatActivity } from "./helper/format";
+import { wrapData } from "../components/helper/api";
+import * as XLSX from "xlsx";
 
 const {
   getIssuer,
@@ -13,7 +13,7 @@ const {
   getBatches,
   getCerts,
   revokeData,
-} = require('./helper/api');
+} = require("./helper/api");
 const {
   isWalletRegisted,
   connectMetaMask,
@@ -21,8 +21,8 @@ const {
   deployDocumentStore,
   issueDocument,
   revokeDocument,
-} = require('./helper/ultis');
-const { formatBatchStatus } = require('./helper/format');
+} = require("./helper/ultis");
+const { formatBatchStatus } = require("./helper/format");
 
 const Home = (props) => {
   const [isConnected, setIsConnected] = useState(false);
@@ -71,7 +71,7 @@ const Home = (props) => {
   };
 
   const handleChangeWalletAccount = async () => {
-    window.ethereum.on('accountsChanged', async function () {
+    window.ethereum.on("accountsChanged", async function () {
       // Time to reload your interface with accounts[0]!
       await connectWallet();
     });
@@ -85,7 +85,11 @@ const Home = (props) => {
   const deployContract = async () => {
     const data = await deployDocumentStore(props.wallet);
     await updateContractAddress(data.contractAddress);
-    await updateDeployTransaction(data.contractAddress, data.transactionHash, data.block);
+    await updateDeployTransaction(
+      data.contractAddress,
+      data.transactionHash,
+      data.block
+    );
     setIsDeployed(true);
   };
 
@@ -108,8 +112,14 @@ const Home = (props) => {
     setCerts(data);
   };
 
+  console.log(selected);
+
   const issue = async (merkleRoot) => {
-    const tx = await issueDocument(merkleRoot, issuer.contractAddress, issuer.owner);
+    const tx = await issueDocument(
+      merkleRoot,
+      issuer.contractAddress,
+      issuer.owner
+    );
     await getHistoryActions();
     await getAllBatches();
   };
@@ -133,15 +143,16 @@ const Home = (props) => {
 
   //excel
   const convertToJson = (csv) => {
-    var lines = csv.split('\n');
+    var lines = csv.split("\n");
+    // console.log(lines);
     var result = [];
 
-    var headers = lines[0].split(',');
+    var headers = lines[0].split(",");
 
     for (var i = 1; i < lines.length - 1; i++) {
       //csv auto add \n at the end of file, to be fix
       var obj = {};
-      var currentline = lines[i].split(',');
+      var currentline = lines[i].split(",");
 
       for (var j = 0; j < headers.length; j++) {
         obj[headers[j]] = currentline[j];
@@ -149,23 +160,29 @@ const Home = (props) => {
 
       result.push(obj);
     }
+    // console.log(result);
     return result; //JavaScript object
+    // return JSON.stringify(result); //JSON
   };
 
   const filePathset = (e) => {
     var file = e.target.files[0];
+    console.log(file);
     setFile(file);
+
+    console.log(file);
   };
 
-  const handleChange = async (e) => {
+  const handleChange = (e) => {
     var f = file;
+    console.log(f);
     // var name = f.name;
     const reader = new FileReader();
     reader.onload = async (evt) => {
       // evt = on_file_select event
       /* Parse data */
       const bstr = evt.target.result;
-      const wb = XLSX.read(bstr, { type: 'binary' });
+      const wb = XLSX.read(bstr, { type: "binary" });
 
       /* Get first worksheet */
       const wsname = wb.SheetNames[0];
@@ -175,12 +192,13 @@ const Home = (props) => {
       const data = XLSX.utils.sheet_to_csv(ws, { header: 1 });
 
       /* Update state */
+      console.log("Data>>>" + data); // shows that excel data is read
       console.log(convertToJson(data)); // shows data in json format
       await wrapData(convertToJson(data)); //upload to mongo
+      await getBatches();
+      await getCerts();
     };
     reader.readAsBinaryString(f);
-    await getAllBatches();
-    await getAllCerts();
   };
 
   return (
@@ -190,7 +208,7 @@ const Home = (props) => {
           M-SoftTech <span class="menu">&#9776;</span>
         </p>
         <p class="logo1">
-          {' '}
+          {" "}
           <span class="menu1">&#9776;</span>
         </p>
         <a href="# " class="icon-a">
@@ -258,7 +276,7 @@ const Home = (props) => {
                   }
                 }}
               >
-                {isConnected ? 'Connected' : 'Connect Wallet'}
+                {isConnected ? "Connected" : "Connect Wallet"}
               </button>
             </div>
           </div>
@@ -272,9 +290,7 @@ const Home = (props) => {
           <div class="box">
             <p class="head-1">{issuer.name}</p>
             {isDeployed ? (
-              <a class="number" href={`https://testnet.bscscan.com/address/${issuer.contractAddress}`}>
-                {issuer.contractAddress}
-              </a>
+              <p class="number">{issuer.contractAddress}</p>
             ) : (
               <button
                 className="acount-btn"
@@ -287,7 +303,8 @@ const Home = (props) => {
             )}
 
             <p class="percent">
-              <i class="fa fa-long-arrow-up" aria-hidden="true"></i> 5.674% <span>Since Last Months</span>
+              <i class="fa fa-long-arrow-up" aria-hidden="true"></i> 5.674%{" "}
+              <span>Since Last Months</span>
             </p>
             <i class="fa fa-line-chart box-icon"></i>
           </div>
@@ -327,7 +344,9 @@ const Home = (props) => {
                     <p>
                       {batch.merkleRoot}
                       <br />
-                      <span class="no-1">{formatBatchStatus(batch.status)}</span>
+                      <span class="no-1">
+                        {formatBatchStatus(batch.status)}
+                      </span>
                     </p>
                     {batch.status === 1 && (
                       <button
@@ -390,7 +409,8 @@ const Home = (props) => {
                     rel="noopener noreferrer"
                     href={`https://testnet.bscscan.com/tx/${activity.hash}`}
                   >
-                    <i class="fa fa-circle"></i> {formatActivity(activity.action)}
+                    <i class="fa fa-circle"></i>{" "}
+                    {formatActivity(activity.action)}
                   </a>
                 );
               })}
@@ -404,7 +424,7 @@ const Home = (props) => {
           <div class="box-8">
             <div class="content-box">
               <p>
-                Top Selling Projects{' '}
+                Top Selling Projects{" "}
                 <span>
                   <button
                     className="acount-btn"
@@ -430,14 +450,12 @@ const Home = (props) => {
                 {selected.map((cert, key) => {
                   return (
                     <tr>
-                      <a href={`http://localhost:3001/cert/${cert.targetHash}`}>
-                        <th>{cert.studentId}</th> <th>{cert.name}</th>
-                        <th>{cert.dob}</th>
-                        <th>{cert.studyMode}</th>
-                        <th>{cert.classification}</th>
-                        <th>{cert.graduatedYear}</th>
-                      </a>
-
+                      <th>{cert.studentId}</th>
+                      <th>{cert.name}</th>
+                      <th>{cert.dob}</th>
+                      <th>{cert.studyMode}</th>
+                      <th>{cert.classification}</th>
+                      <th>{cert.graduatedYear}</th>
                       <th>
                         <label>
                           <input
