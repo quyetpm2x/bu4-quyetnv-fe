@@ -46,7 +46,7 @@ class ExcelToJson extends React.Component {
 
       /* Update state */
       // console.log("Data>>>" + data); // shows that excel data is read
-      // console.log(this.convertToJson(data)); // shows data in json format
+      console.log(this.convertToJson(data)); // shows data in json format
       await wrapData(this.convertToJson(data)); //upload to mongo
     };
     reader.readAsBinaryString(f);
@@ -70,7 +70,7 @@ class ExcelToJson extends React.Component {
 
       result.push(obj);
     }
-    console.log(result);
+    // console.log(result);
     return result; //JavaScript object
     // return JSON.stringify(result); //JSON
   }

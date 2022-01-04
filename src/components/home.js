@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import { act } from "react-dom/cjs/react-dom-test-utils.production.min";
 import { Link } from "react-router-dom";
 import { formatActivity } from "./helper/format";
+import { wrapData } from "../components/helper/api";
+import * as XLSX from "xlsx";
+
 const {
   getIssuer,
   updateContractAddress,
@@ -29,7 +32,7 @@ const Home = (props) => {
   const [batches, setBatches] = useState([]);
   const [certs, setCerts] = useState([]);
   const [selected, setSelected] = useState([]);
-  const [file, setFile] = useState([]);
+  const [file, setFile] = useState({});
 
   useEffect(async () => {
     const deployed = await checkContractDeploy();
@@ -136,6 +139,66 @@ const Home = (props) => {
     });
     const merkleRoot = await revokeData(studentIds);
     await revokeDocument(merkleRoot, issuer.contractAddress, issuer.owner);
+  };
+
+  //excel
+  const convertToJson = (csv) => {
+    var lines = csv.split("\n");
+    // console.log(lines);
+    var result = [];
+
+    var headers = lines[0].split(",");
+
+    for (var i = 1; i < lines.length - 1; i++) {
+      //csv auto add \n at the end of file, to be fix
+      var obj = {};
+      var currentline = lines[i].split(",");
+
+      for (var j = 0; j < headers.length; j++) {
+        obj[headers[j]] = currentline[j];
+      }
+
+      result.push(obj);
+    }
+    // console.log(result);
+    return result; //JavaScript object
+    // return JSON.stringify(result); //JSON
+  };
+
+  const filePathset = (e) => {
+    var file = e.target.files[0];
+    console.log(file);
+    setFile(file);
+
+    console.log(file);
+  };
+
+  const handleChange = (e) => {
+    var f = file;
+    console.log(f);
+    // var name = f.name;
+    const reader = new FileReader();
+    reader.onload = async (evt) => {
+      // evt = on_file_select event
+      /* Parse data */
+      const bstr = evt.target.result;
+      const wb = XLSX.read(bstr, { type: "binary" });
+
+      /* Get first worksheet */
+      const wsname = wb.SheetNames[0];
+      const ws = wb.Sheets[wsname];
+
+      /* Convert array of arrays */
+      const data = XLSX.utils.sheet_to_csv(ws, { header: 1 });
+
+      /* Update state */
+      console.log("Data>>>" + data); // shows that excel data is read
+      console.log(convertToJson(data)); // shows data in json format
+      await wrapData(convertToJson(data)); //upload to mongo
+      await getBatches();
+      await getCerts();
+    };
+    reader.readAsBinaryString(f);
   };
 
   return (

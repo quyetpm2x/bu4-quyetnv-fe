@@ -10,6 +10,7 @@ import Landing from './components/layout/landing';
 import Home from "./components/home";
 import { useState } from "react";
 import VerifyPage from "./components/verify";
+import ExcelToJson from "./utils/ExcelToJson";
 
 function App() {
   const [wallet, setWallet] = useState('');
@@ -20,6 +21,7 @@ function App() {
           {/* <Route path='/' element={<Landing />}  exact/> */}
           <Route path='/home' element={<Home wallet={wallet} setWallet={setWallet} />} exact/>
           <Route path='/verify' element={<VerifyPage />} exact/>
+          <Route path='/uploadCerts' element={<ExcelToJson/>} exact/>
           {/* <Route path='/login' element={<Login />} exact/>
           <Route path='/register' element={<Login />} exact/> */}
 

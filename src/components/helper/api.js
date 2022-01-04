@@ -57,4 +57,9 @@ export const revokeData = async (studentIds) => {
     return response.data;
 }
 
+export const wrapData = async (data) =>{
+    const response = await axiosInstance.post('/certs/wrap', {certs: data});
+    return response.data;
+}
+
 
