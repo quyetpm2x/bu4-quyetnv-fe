@@ -62,4 +62,10 @@ export const wrapData = async (data) =>{
     return response.data;
 }
 
+export const getPublicCert = async (targetHash) => {
+    console.log('di vao day');
+    const response = await axiosInstance.get(`/certs/${targetHash}`);
+    return response.data;
+}
+
 
