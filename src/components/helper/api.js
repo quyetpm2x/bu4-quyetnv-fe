@@ -57,6 +57,10 @@ export const revokeData = async (studentIds) => {
     return response.data;
 }
 
+export const wrapData = async (data) =>{
+    const response = await axiosInstance.post('/certs/wrap', {certs: data});
+    return response.data;
+}
 export const getPublicCert = async (targetHash) => {
     console.log('di vao day');
     const response = await axiosInstance.get(`/certs/${targetHash}`);

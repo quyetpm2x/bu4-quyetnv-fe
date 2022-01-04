@@ -1,39 +1,26 @@
 {
     "data": {
-        "studyMode":1,
-        "classification":1,
-        "graduatedYear":2022,
-        "dob":"20/05/1998",
-        "name":"Roger",
-        "studentId":"10"
+        "studentId": "20184114",
+        "name": "John",
+        "dob": "7/24/00",
+        "graduatedYear": 2023,
+        "classification": "Good",
+        "studyMode": "Partime"
     },
     "issuer": {
-        "contractAddress": "0x30a5C8F0a006C771175fF9256e3CD27DcaF04708",
-        "name": "NEU",
-        "website": "hust.edu.vn",
-        "email": "hust@gmail.com",
-        "phone": "0836184548",
-        "creationHash": "0x198f4f00f6b8140e8cdd6377ea003728b3be95577ab2dddbfcf6db1e21614520"
+        "contractAddress": "0x02EeBCe1d21C8939086d72d026Bf7fA3D28889Db",
+        "name": "Hieu 3",
+        "website": "hieu4.edu.vn",
+        "email": "hieu4@gmail.com",
+        "phone": "0836184548"
     },
     "proofs": {
-        "targetHash": "0x56e20ba14025d4ab74957b04a4fe7301e2eb420e086f36b2b2bcd18219e77096",
-        "merkleRoot": "0xb70240eca88f18293e8bff73eefe38548e1cd61a3146e411f4f32a9fa65db0ba",
+        "targetHash": "0x0ec420ee2d870480aee58bdd3e9dd1d45ece66ab75616609147eef0cd2c7505f",
+        "merkleRoot": "0xbfeba86f66b4495b2faa76f497b1cddba86fca764460c77d595af189507020c6",
         "path": [
             {
-                "position":"left",
-                "data": "ae3e6c8c6e9d60e40718da8b1273cedaea7d1e6cad99f12f55fac851a553043b"
-            },
-            {
-                "position":"right",
-                "data": "bd70cb165562a148fa030f2a8808e152ef4fe525e7b9c06d4a7d6f46591c1f11"
-            },
-            {
-                "position":"right",
-                "data": "cbbd338e2aef0e18d503e6681706c1e5cf849bafa184b48eed92a12abbda8f2b"
-            },
-            {
-                "position":"right",
-                "data": "285e6597f6832fc53e0a42cd2445738862faf0dd4c58d0752c306481d5be6aee"
+                "position": "right",
+                "data": "94bbf3f776c67e558bb056f381588fce32303f1db69dabc9ac7a3cf50c4633f6"
             }
         ]
     }
