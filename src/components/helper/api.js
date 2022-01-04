@@ -57,4 +57,10 @@ export const revokeData = async (studentIds) => {
     return response.data;
 }
 
+export const getPublicCert = async (targetHash) => {
+    console.log('di vao day');
+    const response = await axiosInstance.get(`/certs/${targetHash}`);
+    return response.data;
+}
+
 

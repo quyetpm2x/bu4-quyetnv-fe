@@ -10,6 +10,7 @@ import Landing from './components/layout/landing';
 import Home from "./components/home";
 import { useState } from "react";
 import VerifyPage from "./components/verify";
+import Cert from "./components/cert";
 
 function App() {
   const [wallet, setWallet] = useState('');
@@ -20,6 +21,7 @@ function App() {
           {/* <Route path='/' element={<Landing />}  exact/> */}
           <Route path='/home' element={<Home wallet={wallet} setWallet={setWallet} />} exact/>
           <Route path='/verify' element={<VerifyPage />} exact/>
+          <Route path={`/cert/:targetHash`} element={<Cert />} exact/>
           {/* <Route path='/login' element={<Login />} exact/>
           <Route path='/register' element={<Login />} exact/> */}
 
