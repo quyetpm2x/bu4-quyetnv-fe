@@ -1,21 +1,35 @@
 import React, { useEffect, useState } from "react";
+import { act } from "react-dom/cjs/react-dom-test-utils.production.min";
 import { Link } from "react-router-dom";
-import * as XLSX from "xlsx";
-import { readFile } from "fs";
-
-const { getIssuer, updateContractAddress, wrapData } = require("./helper/api");
+import { formatActivity } from "./helper/format";
+const {
+  getIssuer,
+  updateContractAddress,
+  updateDeployTransaction,
+  getHistory,
+  getBatches,
+  getCerts,
+  revokeData,
+} = require("./helper/api");
 const {
   isWalletRegisted,
   connectMetaMask,
   registWallet,
   deployDocumentStore,
+  issueDocument,
+  revokeDocument,
 } = require("./helper/ultis");
+const { formatBatchStatus } = require("./helper/format");
 
 const Home = (props) => {
   const [isConnected, setIsConnected] = useState(false);
   const [isDeployed, setIsDeployed] = useState(false);
   const [issuer, setIssuer] = useState({});
-  const [file, setFile] = useState({}); //set files state
+  const [history, setHistory] = useState([]);
+  const [batches, setBatches] = useState([]);
+  const [certs, setCerts] = useState([]);
+  const [selected, setSelected] = useState([]);
+  const [file, setFile] = useState([]);
 
   useEffect(async () => {
     const deployed = await checkContractDeploy();
@@ -23,18 +37,19 @@ const Home = (props) => {
     setIssuer(issuer);
     setIsDeployed(deployed);
     await handleChangeWalletAccount();
+    await getHistoryActions();
+    await getAllBatches();
+    await getAllCerts();
   }, []);
 
-  useEffect(async () => {
-    const issuer = await getIssuer();
-    setIssuer(issuer);
-  }, [isDeployed]);
+  //   useEffect( async () => {
+  //     const issuer = await getIssuer();
+  //     setIssuer(issuer);
+  //  }, [isDeployed]);
 
   // useEffect(async () => {
   //   await connectWallet();
   // }, [window.ethereum.currentProvider]);
-
-  console.log(issuer);
 
   const connectWallet = async () => {
     let wallet;
@@ -65,66 +80,62 @@ const Home = (props) => {
   };
 
   const deployContract = async () => {
-    const store = await deployDocumentStore(props.wallet);
-    await updateContractAddress(store);
+    const data = await deployDocumentStore(props.wallet);
+    await updateContractAddress(data.contractAddress);
+    await updateDeployTransaction(
+      data.contractAddress,
+      data.transactionHash,
+      data.block
+    );
     setIsDeployed(true);
-    console.log(store);
   };
 
-  //for excels
-  const convertToJson = (csv) => {
-    var lines = csv.split("\n");
-    // console.log(lines);
-    var result = [];
+  const getHistoryActions = async () => {
+    const actions = await getHistory();
+    setHistory(actions);
+  };
 
-    var headers = lines[0].split(",");
+  const getAllBatches = async () => {
+    const data = await getBatches();
+    setBatches(data);
+  };
 
-    for (var i = 1; i < lines.length - 1; i++) {
-      //csv auto add \n at the end of file, to be fix
-      var obj = {};
-      var currentline = lines[i].split(",");
+  const getAllCerts = async () => {
+    const data = await getCerts();
+    data.map((cert) => {
+      cert.checked = false;
+      selected.push(cert);
+    });
+    setCerts(data);
+  };
 
-      for (var j = 0; j < headers.length; j++) {
-        obj[headers[j]] = currentline[j];
+  console.log(selected);
+
+  const issue = async (merkleRoot) => {
+    const tx = await issueDocument(
+      merkleRoot,
+      issuer.contractAddress,
+      issuer.owner
+    );
+    await getHistoryActions();
+    await getAllBatches();
+  };
+
+  const handleCheckBox = (key) => {
+    const checkedList = selected;
+    checkedList[key].checked = !checkedList[key].checked;
+    setSelected(checkedList);
+  };
+
+  const revoke = async () => {
+    const studentIds = [];
+    selected.map((cert) => {
+      if (cert.checked) {
+        studentIds.push(cert.studentId);
       }
-
-      result.push(obj);
-    }
-    console.log(result);
-    return result; //JavaScript object
-    // return JSON.stringify(result); //JSON
-  };
-
-  const filePathset = (e) => {
-
-    var a_file = e.target.files[0];
-    console.log(a_file);
-    setFile(a_file);
-  };
-
-  const handleChange = (evt) => {
-    const reader = new FileReader();
-    reader.onload = async (evt) => {
-      // evt = on_file_select event
-      /* Parse data */
-      const bstr = evt.target.result;
-      const wb = XLSX.read(bstr, { type: "binary" });
-
-      /* Get first worksheet */
-      const wsname = wb.SheetNames[0];
-      const ws = wb.Sheets[wsname];
-
-      /* Convert array of arrays */
-      const data = XLSX.utils.sheet_to_csv(ws, { header: 1 });
-
-      /* Update state */
-      console.log("Data>>>" + data); // shows that excel data is read
-      console.log(this.convertToJson(data)); // shows data in json format
-      await wrapData(convertToJson(data)); //upload to mongo
-      // await getBatches();
-      // await getCerts();
-    };
-    reader.readAsBinaryString(file);
+    });
+    const merkleRoot = await revokeData(studentIds);
+    await revokeDocument(merkleRoot, issuer.contractAddress, issuer.owner);
   };
 
   return (
@@ -197,7 +208,6 @@ const Home = (props) => {
               <button
                 className="acount-btn"
                 onClick={async () => {
-                  console.log("connect");
                   if (!isConnected) {
                     await connectWallet();
                   }
@@ -236,28 +246,26 @@ const Home = (props) => {
             <i class="fa fa-line-chart box-icon"></i>
           </div>
         </div>
-        <div class="col-div-4-1">
+        {/* <div class="col-div-4-1">
           <div class="box">
             <p class="head-1">purchases</p>
             <p class="number">2343</p>
-            <p class="percent" style={{ color: "red !important" }}>
-              <i class="fa fa-long-arrow-down" aria-hidden="true"></i> 5.64%{" "}
-              <span>Since Last Months</span>
+            <p class="percent" style={{ color: 'red !important' }}>
+              <i class="fa fa-long-arrow-down" aria-hidden="true"></i> 5.64% <span>Since Last Months</span>
             </p>
             <i class="fa fa-circle-o-notch box-icon"></i>
           </div>
-        </div>
-        <div class="col-div-4-1">
+        </div> */}
+        {/* <div class="col-div-4-1">
           <div class="box">
             <p class="head-1">orders</p>
             <p class="number">35343</p>
             <p class="percent">
-              <i class="fa fa-long-arrow-up" aria-hidden="true"></i> 5.674%{" "}
-              <span>Since Last Months</span>
+              <i class="fa fa-long-arrow-up" aria-hidden="true"></i> 5.674% <span>Since Last Months</span>
             </p>
             <i class="fa fa-shopping-bag box-icon"></i>
           </div>
-        </div>
+        </div> */}
 
         <div class="clearfix"></div>
         <br />
@@ -267,32 +275,29 @@ const Home = (props) => {
             <div class="content-box-1">
               <p class="head-1">Overview</p>
               <br />
-              <div class="m-box active">
-                <p>
-                  Member Profit
-                  <br />
-                  <span class="no-1">Last Months</span>
-                </p>
-                <span class="no">+2343</span>
-              </div>
-
-              <div class="m-box">
-                <p>
-                  Member Profit
-                  <br />
-                  <span class="no-1">Last Months</span>
-                </p>
-                <span class="no">+2343</span>
-              </div>
-
-              <div class="m-box">
-                <p>
-                  Member Profit
-                  <br />
-                  <span class="no-1">Last Months</span>
-                </p>
-                <span class="no">+2343</span>
-              </div>
+              {batches.map((batch) => {
+                return (
+                  <div class="m-box active">
+                    <p>
+                      {batch.merkleRoot}
+                      <br />
+                      <span class="no-1">
+                        {formatBatchStatus(batch.status)}
+                      </span>
+                    </p>
+                    {batch.status === 1 && (
+                      <button
+                        className="acount-btn"
+                        onClick={async () => {
+                          await issue(batch.merkleRoot);
+                        }}
+                      >
+                        Issue Documents
+                      </button>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -330,30 +335,22 @@ const Home = (props) => {
           <div class="box-1">
             <div class="content-box-1">
               <p class="head-1">
-                Acitivity <span>View All</span>
+                Activites <span>View All</span>
               </p>
               <br />
-              <p class="act-p">
-                <i class="fa fa-circle"></i> Lorem Ipsum is simply dummy text of
-                the printing and typesetting industry.{" "}
-              </p>
-              <p class="act-p">
-                <i class="fa fa-circle" style={{ color: "red!important" }}></i>{" "}
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry.{" "}
-              </p>
-              <p class="act-p">
-                <i
-                  class="fa fa-circle"
-                  style={{ color: "green!important" }}
-                ></i>{" "}
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry.{" "}
-              </p>
-              <p class="act-p">
-                <i class="fa fa-circle"></i> Lorem Ipsum is simply dummy text of
-                the printing and typesetting industry.{" "}
-              </p>
+              {history.map((activity) => {
+                return (
+                  <a
+                    class="act-p"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href={`https://testnet.bscscan.com/tx/${activity.hash}`}
+                  >
+                    <i class="fa fa-circle"></i>{" "}
+                    {formatActivity(activity.action)}
+                  </a>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -364,45 +361,52 @@ const Home = (props) => {
           <div class="box-8">
             <div class="content-box">
               <p>
-                Top Selling Projects <span>Sell All</span>
+                Top Selling Projects{" "}
+                <span>
+                  <button
+                    className="acount-btn"
+                    onClick={async () => {
+                      await revoke();
+                    }}
+                  >
+                    Revoke
+                  </button>
+                </span>
               </p>
               <br />
               <table>
                 <tr>
-                  <th>Company</th>
-                  <th>Contact</th>
-                  <th>Country</th>
+                  <th>Student Id</th>
+                  <th>Name</th>
+                  <th>Date of birth</th>
+                  <th>Study mode</th>
+                  <th>Classification</th>
+                  <th>Year</th>
+                  <th>Check</th>
                 </tr>
-                <tr>
-                  <td>Alfreds Futterkiste</td>
-                  <td>Maria Anders</td>
-                  <td>Germany</td>
-                </tr>
-                <tr>
-                  <td>Centro comercial Moctezuma</td>
-                  <td>Francisco Chang</td>
-                  <td>Mexico</td>
-                </tr>
-                <tr>
-                  <td>Ernst Handel</td>
-                  <td>Roland Mendel</td>
-                  <td>Austria</td>
-                </tr>
-                <tr>
-                  <td>Island Trading</td>
-                  <td>Helen Bennett</td>
-                  <td>UK</td>
-                </tr>
-                <tr>
-                  <td>Ernst Handel</td>
-                  <td>Roland Mendel</td>
-                  <td>Austria</td>
-                </tr>
-                <tr>
-                  <td>Island Trading</td>
-                  <td>Helen Bennett</td>
-                  <td>UK</td>
-                </tr>
+                {selected.map((cert, key) => {
+                  return (
+                    <tr>
+                      <th>{cert.studentId}</th>
+                      <th>{cert.name}</th>
+                      <th>{cert.dob}</th>
+                      <th>{cert.studyMode}</th>
+                      <th>{cert.classification}</th>
+                      <th>{cert.graduatedYear}</th>
+                      <th>
+                        <label>
+                          <input
+                            type="checkbox"
+                            defaultChecked={cert.checked}
+                            onChange={() => {
+                              handleCheckBox(key);
+                            }}
+                          />
+                        </label>
+                      </th>
+                    </tr>
+                  );
+                })}
               </table>
             </div>
           </div>

@@ -17,9 +17,44 @@ export const updateContractAddress = async (contractAddress) => {
     return response.data;
 }
 
-export const wrapData = async (data) => {
-    const reponse = await axiosInstance.post('/certs/wrap', {certs: data});
-    return reponse.data;
+export const updateDeployTransaction = async (contractAddress, transactionHash, block) => {
+    const response = await axiosInstance.post('/transactions', {
+        hash: transactionHash,
+        contractAddress: contractAddress,
+        block: block,
+        action: 3,
+    })
+    return response.data;
+}
+
+export const getHistory = async () => {
+    const response = await axiosInstance.get('/transactions/list');
+    return response.data;
+}
+
+export const getBatches = async () => {
+    const response = await axiosInstance.get('/certs/batches');
+    return response.data;
+}
+
+export const getCerts = async () => {
+    const response = await axiosInstance.get('/certs/list');
+    return response.data;
+}
+
+export const verifyJson = async (verifyObject) => { 
+    try {
+        const response = await axiosInstance.post('/certs/verify', verifyObject);
+        return response.data;
+    } catch(err) {
+        throw err;
+    }
+    
+}
+
+export const revokeData = async (studentIds) => {
+    const response = await axiosInstance.post('/certs/revoke', studentIds);
+    return response.data;
 }
 
 
