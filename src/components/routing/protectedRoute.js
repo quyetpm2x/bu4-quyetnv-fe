@@ -22,8 +22,8 @@ const ProtectedRoute = () => {
             <Home />
           </>
         ) : (
-          // <Navigate to="/home" />
-          <Home />
+          <Navigate to="/login" />
+          // <Home />
         )
   );
 };

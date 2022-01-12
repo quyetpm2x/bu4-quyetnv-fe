@@ -1,11 +1,14 @@
 .login {
-    padding: 79px 0 80px;
-    border-bottom: 1px solid var(--border-color);
+    position: relative;
 }
 
-.register {
-    padding: 79px 0 80px;
-    border-bottom: 1px solid var(--border-color);
+.bg-university {
+    background-image: url('../images/login/DH-Bach-khoa-HN-9252-1631681129.jpg');
+    height: 100vh;
+    width: 100vw;
+    background-repeat: no-repeat;
+    background-size: cover;
+    filter: blur(2px);
 }
 
 .row-0 {
@@ -16,53 +19,7 @@
     display: flex;
 }
 
-.welcome {
-    background: var(--bg-section);
-    padding: 48px 0;
-    color: #fff;
-}   
 
-.welcome-content {
-    padding: 0 53px;
-    margin: 0 45px;
-}
-
-.welcome-title {
-    line-height:36px;
-    margin-bottom: 10px;
-    font-size: 26px;
-    font-weight: 900;
-}
-
-.welcome-desc {
-    font-size: 20px;
-    line-height: 26px;
-}
-
-.section-container {
-    margin: 0 45px;
-    padding: 0 45px;
-}
-
-.pad-04 {
-    padding: 0 8px;
-}
-
-.media {
-    margin: 48px 5px 0;
-}
-
-.media__title {
-    margin: 24px 0 14px;
-    font-size: 20px;
-    line-height: 23px;
-}
-
-.media__content {
-    color: #555;
-    font-size: 17px;
-    line-height: 24px;
-}
 ::-webkit-input-placeholder {
     color: black;
     font-family: inherit;
@@ -71,15 +28,9 @@
     opacity: 0.6;
 }
 
-.signUpForm {
-    padding: 0 8px;
-    display: flex;
-    justify-content: flex-end;
-}
 
 .acount {
     padding: 32px;
-    margin-top: -110px;
     background: #fff;
     box-shadow: 0 9px 46px 8px rgb(0 0 0 / 2%), 0 24px 38px 3px rgb(0 0 0 / 4%), 0 11px 15px -7px rgb(0 0 0 / 5%);
     border-radius: 10px;
@@ -222,43 +173,23 @@
     color: var(--hover-color);
 }
 
-.sign-in-social {
-    margin-top: 32px;
-    width: 100%;
-}
-
-.sign-in-social-social{
-    width: 100%;
-    height: 56px;
-    padding: 0 30px;
-    margin-top: 16px;
-    border-radius: 3rem;
-    cursor: pointer;
-    transition: all 0.3s;
-    font-size: 16px;
-    border: 1px solid #e6e6e6;
-    color: #555;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-}
-
-.sign-in-social__icon {
-    width: 26px;
-    height: 26px;
-    position: absolute;
-    right: 2rem;
-    font-size: 26px;
-}
-
-.signInForm {
+.logInForm {
     padding: 0 8px;
-    display: flex;
-    justify-content: flex-end;
+    position: absolute;
+    transform: translateY(calc(-100vh + 50%)) translateX(calc(50vw - 50%));
+}
+
+.registerForm {
+    padding: 0 8px;
+    position: absolute;
+    transform: translateY(calc(-100vh + 20%)) translateX(calc(50vw - 50%));
 }
 
 .flex-wrap {
     display: flex;
     flex-wrap: wrap;
+}
+
+.pointer {
+    cursor: pointer;
 }

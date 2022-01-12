@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { act } from 'react-dom/cjs/react-dom-test-utils.production.min';
-import { Link } from 'react-router-dom';
-import { formatActivity } from './helper/format';
+import React, { useEffect, useState } from "react";
+import { act } from "react-dom/cjs/react-dom-test-utils.production.min";
+import { Link } from "react-router-dom";
+import { formatActivity } from "./helper/format";
 const {
   getIssuer,
   updateContractAddress,
@@ -10,7 +10,7 @@ const {
   getBatches,
   getCerts,
   revokeData,
-} = require('./helper/api');
+} = require("./helper/api");
 const {
   isWalletRegisted,
   connectMetaMask,
@@ -18,8 +18,8 @@ const {
   deployDocumentStore,
   issueDocument,
   revokeDocument,
-} = require('./helper/ultis');
-const { formatBatchStatus } = require('./helper/format');
+} = require("./helper/ultis");
+const { formatBatchStatus } = require("./helper/format");
 
 const Home = (props) => {
   const [isConnected, setIsConnected] = useState(false);
@@ -67,7 +67,7 @@ const Home = (props) => {
   };
 
   const handleChangeWalletAccount = async () => {
-    window.ethereum.on('accountsChanged', async function () {
+    window.ethereum.on("accountsChanged", async function () {
       // Time to reload your interface with accounts[0]!
       await connectWallet();
     });
@@ -81,7 +81,11 @@ const Home = (props) => {
   const deployContract = async () => {
     const data = await deployDocumentStore(props.wallet);
     await updateContractAddress(data.contractAddress);
-    await updateDeployTransaction(data.contractAddress, data.transactionHash, data.block);
+    await updateDeployTransaction(
+      data.contractAddress,
+      data.transactionHash,
+      data.block
+    );
     setIsDeployed(true);
   };
 
@@ -107,7 +111,11 @@ const Home = (props) => {
   console.log(selected);
 
   const issue = async (merkleRoot) => {
-    const tx = await issueDocument(merkleRoot, issuer.contractAddress, issuer.owner);
+    const tx = await issueDocument(
+      merkleRoot,
+      issuer.contractAddress,
+      issuer.owner
+    );
     await getHistoryActions();
     await getAllBatches();
   };
@@ -136,7 +144,7 @@ const Home = (props) => {
           M-SoftTech <span class="menu">&#9776;</span>
         </p>
         <p class="logo1">
-          {' '}
+          {" "}
           <span class="menu1">&#9776;</span>
         </p>
         <a href="# " class="icon-a">
@@ -174,27 +182,14 @@ const Home = (props) => {
           </div>
 
           <div class="col-div-6">
-            <i class="fa fa-search search-icon"></i>
-
-            <i class="fa fa-bell noti-icon"></i>
-            <div class="notification-div">
-              <p class="noti-head">
-                Notification <span>2</span>
-              </p>
-              <hr class="hr" />
-              <p>
-                Your Order is Placed
-                <span>Lorem Ipsum is simply dummy </span>
-              </p>
-              <p>
-                Your Order is Placed
-                <span>Lorem Ipsum is simply dummy </span>
-              </p>
-              <p>
-                Your Order is Placed
-                <span>Lorem Ipsum is simply dummy </span>
-              </p>
+            {/* <i class="fa fa-search search-icon"></i> */}
+            <div>
+              <Link to="/profile">Edit Profile</Link>
             </div>
+            <div>
+              <Link to="/degree">Degree</Link>
+            </div>
+
             <div class="profile">
               <button
                 className="acount-btn"
@@ -204,7 +199,7 @@ const Home = (props) => {
                   }
                 }}
               >
-                {isConnected ? 'Connected' : 'Connect Wallet'}
+                {isConnected ? "Connected" : "Connect Wallet"}
               </button>
             </div>
           </div>
@@ -231,7 +226,8 @@ const Home = (props) => {
             )}
 
             <p class="percent">
-              <i class="fa fa-long-arrow-up" aria-hidden="true"></i> 5.674% <span>Since Last Months</span>
+              <i class="fa fa-long-arrow-up" aria-hidden="true"></i> 5.674%{" "}
+              <span>Since Last Months</span>
             </p>
             <i class="fa fa-line-chart box-icon"></i>
           </div>
@@ -271,7 +267,9 @@ const Home = (props) => {
                     <p>
                       {batch.merkleRoot}
                       <br />
-                      <span class="no-1">{formatBatchStatus(batch.status)}</span>
+                      <span class="no-1">
+                        {formatBatchStatus(batch.status)}
+                      </span>
                     </p>
                     {batch.status === 1 && (
                       <button
@@ -325,7 +323,8 @@ const Home = (props) => {
                     rel="noopener noreferrer"
                     href={`https://testnet.bscscan.com/tx/${activity.hash}`}
                   >
-                    <i class="fa fa-circle"></i> {formatActivity(activity.action)}
+                    <i class="fa fa-circle"></i>{" "}
+                    {formatActivity(activity.action)}
                   </a>
                 );
               })}
@@ -339,9 +338,8 @@ const Home = (props) => {
           <div class="box-8">
             <div class="content-box">
               <p>
-                Top Selling Projects{' '}
-                <span
-                >
+                Top Selling Projects{" "}
+                <span>
                   <button
                     className="acount-btn"
                     onClick={async () => {
