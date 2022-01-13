@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from 'react-router-dom';
 
 const Sub = () => {
   return (
@@ -132,9 +133,11 @@ const Sub = () => {
             <div class="date-container">
               <div class="valid">Certificate is valid</div>{" "}
             </div>{" "}
-            <span class="close-proof-nav">
-            <i class="fas fa-chevron-right"></i>
-            </span>
+            <Link to="/degree">
+              <span class="close-proof-nav">
+                <i class="fas fa-chevron-right"></i>
+              </span>
+            </Link>
           </div>{" "}
           <section class="ps-container scroll-area-proofs ps">
             <ul class="accordion css-accordion">
@@ -158,13 +161,16 @@ const Sub = () => {
                   class="accordion-item-input"
                 />{" "}
                 <label for="item1" class="accordion-item-hd">
-                  <img src="https://certificate.bcdiploma.com/pub/images/institution.c14f4b8.svg" alt="Issuer" />{" "}
+                  <img
+                    src="https://certificate.bcdiploma.com/pub/images/institution.c14f4b8.svg"
+                    alt="Issuer"
+                  />{" "}
                   <div class="label-content">
                     Issued by
                     <br /> <span>Université Hoa Sen</span>
                   </div>{" "}
                   <span class="accordion-item-hd-cta">
-                  <i class="fas fa-chevron-down"></i>
+                    <i class="fas fa-chevron-down"></i>
                   </span>
                 </label>{" "}
                 <div class="accordion-item-bd">
@@ -179,7 +185,7 @@ const Sub = () => {
                         target="_blank"
                         class="check-proof-button"
                       >
-                        <i class="icon-check-chain"></i> View on blockchain
+                        <i class="fas fa-cube fz-14"></i> View on blockchain
                       </a>
                     </div>{" "}
                     <div class="marginTop8">
@@ -188,7 +194,8 @@ const Sub = () => {
                         target="_blank"
                         class="check-proof-button"
                       >
-                        <i class="fas fa-chevron-down"></i> View on BCdiploma.com
+                        <i class="fas fa-globe fz-14"></i> View on
+                        BCdiploma.com
                       </a>
                     </div>
                   </div>
@@ -215,7 +222,7 @@ const Sub = () => {
                     </span>
                   </div>{" "}
                   <span class="accordion-item-hd-cta">
-                  <i class="fas fa-chevron-down"></i>
+                    <i class="fas fa-chevron-down"></i>
                   </span>
                 </label>{" "}
                 <div class="accordion-item-bd">
@@ -230,7 +237,7 @@ const Sub = () => {
                         target="_blank"
                         class="check-proof-button"
                       >
-                        <i class="icon-check-chain"></i> View on blockchain
+                        <i class="fas fa-cube fz-14"></i> View on blockchain
                       </a>
                     </div>{" "}
                     <div class="marginTop8">
@@ -239,7 +246,8 @@ const Sub = () => {
                         target="_blank"
                         class="check-proof-button"
                       >
-                        <i class="fas fa-chevron-down"></i> View on BCdiploma.com
+                        <i class="fas fa-globe fz-14"></i> View on
+                        BCdiploma.com
                       </a>
                     </div>
                   </div>
@@ -262,7 +270,7 @@ const Sub = () => {
                     <br /> <span>on 2020-07-07</span>
                   </div>{" "}
                   <span class="accordion-item-hd-cta">
-                  <i class="fas fa-chevron-down"></i>
+                    <i class="fas fa-chevron-down"></i>
                   </span>
                 </label>{" "}
                 <div class="accordion-item-bd">
@@ -270,15 +278,15 @@ const Sub = () => {
                     <div class="data">
                       SOCIALIST REPUBLIC OF VIETNAM THE PRESIDENT OF HOA SEN
                       UNIVERSITY has conferred THE DEGREE OF BACHELOR MARKETING
-                      Upon: Ms Nguyen Kim Ngoc Date of birth: 09 January 1997 Year
-                      of graduation: 2020 Degree classification: Very good Mode of
-                      study: Full time Ho Chi Minh City, 19 March 2020 Reg. No:
-                      DTH/1B0214/2020 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM HIỆU
-                      TRƯỞNG TRƯỜNG ĐẠI HỌC HOA SEN cấp BẰNG CỬ NHÂN MARKETING
-                      Cho: Bà Nguyễn Kim Ngọc Ngày sinh: 09/01/1997 Năm tốt
-                      nghiệp: 2020 Xếp loại tốt nghiệp: Giỏi Hình thức đào tạo:
-                      Chính quy TP. Hồ Chí Minh, ngày 19 tháng 03 năm 2020 HIỆU
-                      TRƯỞNG Số hiệu: DTH/1B012806 Số vào sổ cấp bằng:
+                      Upon: Ms Nguyen Kim Ngoc Date of birth: 09 January 1997
+                      Year of graduation: 2020 Degree classification: Very good
+                      Mode of study: Full time Ho Chi Minh City, 19 March 2020
+                      Reg. No: DTH/1B0214/2020 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT
+                      NAM HIỆU TRƯỞNG TRƯỜNG ĐẠI HỌC HOA SEN cấp BẰNG CỬ NHÂN
+                      MARKETING Cho: Bà Nguyễn Kim Ngọc Ngày sinh: 09/01/1997
+                      Năm tốt nghiệp: 2020 Xếp loại tốt nghiệp: Giỏi Hình thức
+                      đào tạo: Chính quy TP. Hồ Chí Minh, ngày 19 tháng 03 năm
+                      2020 HIỆU TRƯỞNG Số hiệu: DTH/1B012806 Số vào sổ cấp bằng:
                       DTH/1B0214/2020 GS.TS. Mai Hồng Quỳ group1 <br />
                       using template "Graduation Certificate 2020 - 21/0x03"
                     </div>{" "}
@@ -354,7 +362,7 @@ const Sub = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <i class="fas fa-globe"></i>
+                  <i class="fas fa-globe fz-14"></i>
                 </a>
               </li>{" "}
               <li>

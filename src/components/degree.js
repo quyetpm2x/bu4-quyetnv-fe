@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from 'react-router-dom';
 
 const Degree = () => {
   return (
@@ -458,14 +459,16 @@ const Degree = () => {
                 class="lds-dual-ring-b animated fadeOut animation-delay-2000"
                 style={{display: "none"}}
               ></div>{" "}
-              <img
-                src="/images/background/double-check.svg"
-                alt="certified icon"
-                class="double-check"
-              />{" "}
-              <span class="toggle-icon-p">
-                verified <i class="ti-angle-right"></i>
-              </span>
+              <Link to="/sub">
+                <img
+                  src="/images/background/double-check.svg"
+                  alt="certified icon"
+                  class="double-check"
+                />{" "}              
+                <span class="toggle-icon-p">
+                  verified <i class="ti-angle-right"></i>
+                </span>
+              </Link>
             </li>
           </ul>
         </nav>{" "}
