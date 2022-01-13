@@ -1,9 +1,10 @@
+import { saveAs } from 'file-saver';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import React, { useEffect, useState } from 'react';
 import { act } from 'react-dom/cjs/react-dom-test-utils.production.min';
 import { useParams } from 'react-router-dom';
-import { getPublicCert, getIssuer } from './helper/api';
+import { getPublicCert, getIssuer, getVerifyData } from './helper/api';
 import { formatClassification, formatStudyMode, removeAccents } from './helper/format';
 
 const Cert = (props) => {
@@ -25,16 +26,28 @@ const Cert = (props) => {
   };
 
   const dowloadPdf = async () => {
-    const input = document.getElementsByClassName('certificat-wrapper certificat-wrapper--front');
-    html2canvas(input)
+    const input = document.getElementById('content');
+    html2canvas(input, {useCORS: true})
       .then((canvas) => {
         const imgData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF();
-        pdf.addImage(imgData, 'JPEG', 0, 0);
+        const pdf = new jsPDF('l');
+        const width = pdf.internal.pageSize.getWidth();
+        const height = pdf.internal.pageSize.getHeight();
+        pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
         // pdf.output('dataurlnewwindow');
         pdf.save("download.pdf");
       })
     ;
+    const verifyData = await getVerifyData(targetHash);
+    const fileName = 'verifyData.json';
+
+    const fileToSave = new Blob([JSON.stringify(verifyData)], {
+        type: 'application/json',
+        name: fileName
+    });
+
+    // Save the file
+    saveAs(fileToSave, fileName);
   }
 
   // const getIssuerData = async () => {
@@ -110,7 +123,9 @@ const Cert = (props) => {
             </ul>
           </div>{" "}
           <ul>
-            <li>
+            <li onClick={() => {
+              dowloadPdf();
+            }}>
               <a
                 aria-label="Print"
                 target="_blank"
@@ -135,7 +150,7 @@ const Cert = (props) => {
             </li>
           </ul>
         </nav>
-        <div class="certificat-wrapper certificat-wrapper--front">
+        <div class="certificat-wrapper certificat-wrapper--front" id='content'>
           <div class="global">
             <div class="left">
               <div class="republic">SOCIALIST REPUBLIC OF VIETNAM</div>{" "}

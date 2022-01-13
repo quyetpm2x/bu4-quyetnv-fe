@@ -13,7 +13,8 @@ export const connectMetaMask = async () => {
     if (issuer.owner && issuer.owner.toLowerCase() === accounts[0].toLowerCase()) {
       return accounts[0];
     }
-  } else if (window.web3) {
+  } 
+  else if (window.web3) {
     window.web3 = new Web3(window.web3.currentProvider);
     const accounts = await window.web3.eth.getAccounts();
     const issuer = await getIssuer();
@@ -32,13 +33,13 @@ export const registWallet = async () => {
     });
     await updateWallet(accounts[0]);
     return accounts[0];
-  } else
-  if (window.web3) {
-    window.web3 = new Web3(window.web3.currentProvider);
-    const accounts = await window.web3.eth.getAccounts();
-    await updateWallet(accounts[0]);
-    return accounts[0];
-  }
+  } 
+  // else if (window.web3) {
+  //   window.web3 = new Web3(window.web3.currentProvider);
+  //   const accounts = await window.web3.eth.getAccounts();
+  //   await updateWallet(accounts[0]);
+  //   return accounts[0];
+  // }
 };
 
 export const isWalletRegisted = async () => {

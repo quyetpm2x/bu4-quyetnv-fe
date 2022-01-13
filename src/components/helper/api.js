@@ -68,4 +68,14 @@ export const getPublicCert = async (targetHash) => {
     return response.data;
 }
 
+export const getVerifyData = async (targetHash) => {
+    const response = await axiosInstance.get(`/certs/verify/${targetHash}`);
+    return response.data;
+}
+
+export const updateIssuer = async (data) => {
+    const response = await axiosInstance.patch('/issuers', data);
+    return response.data;
+}
+
 

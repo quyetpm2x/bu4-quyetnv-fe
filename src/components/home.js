@@ -203,9 +203,11 @@ const Home = (props) => {
         </p>
         <a href="# " class="icon-a">
           <i class="fa fa-dashboard icons"></i> Dashboard
+          <Link to="/home"></Link>
         </a>
         <a href="# " class="icon-a">
-          <i class="fa fa-pie-chart icons"></i> Charts
+          <i class="fa fa-pie-chart icons"></i> Account Manage
+          <Link to="/profile"></Link>
         </a>
         <a href="# " class="icon-a">
           <i class="fa fa-list icons"></i> Projects
