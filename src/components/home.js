@@ -1,7 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { act } from "react-dom/cjs/react-dom-test-utils.production.min";
-import { Link } from "react-router-dom";
-import { formatActivity } from "./helper/format";
+import React, { useEffect, useState } from 'react';
+import { act } from 'react-dom/cjs/react-dom-test-utils.production.min';
+import { Link } from 'react-router-dom';
+import { formatActivity } from './helper/format';
+import { wrapData } from '../components/helper/api';
+import * as XLSX from 'xlsx';
+
 const {
   getIssuer,
   updateContractAddress,
@@ -29,6 +32,7 @@ const Home = (props) => {
   const [batches, setBatches] = useState([]);
   const [certs, setCerts] = useState([]);
   const [selected, setSelected] = useState([]);
+  const [file, setFile] = useState({});
 
   useEffect(async () => {
     const deployed = await checkContractDeploy();
@@ -108,8 +112,6 @@ const Home = (props) => {
     setCerts(data);
   };
 
-  console.log(selected);
-
   const issue = async (merkleRoot) => {
     const tx = await issueDocument(
       merkleRoot,
@@ -135,6 +137,58 @@ const Home = (props) => {
     });
     const merkleRoot = await revokeData(studentIds);
     await revokeDocument(merkleRoot, issuer.contractAddress, issuer.owner);
+  };
+
+  //excel
+  const convertToJson = (csv) => {
+    var lines = csv.split('\n');
+    var result = [];
+
+    var headers = lines[0].split(',');
+
+    for (var i = 1; i < lines.length - 1; i++) {
+      //csv auto add \n at the end of file, to be fix
+      var obj = {};
+      var currentline = lines[i].split(',');
+
+      for (var j = 0; j < headers.length; j++) {
+        obj[headers[j]] = currentline[j];
+      }
+
+      result.push(obj);
+    }
+    return result; //JavaScript object
+  };
+
+  const filePathset = (e) => {
+    var file = e.target.files[0];
+    setFile(file);
+  };
+
+  const handleChange = async (e) => {
+    var f = file;
+    // var name = f.name;
+    const reader = new FileReader();
+    reader.onload = async (evt) => {
+      // evt = on_file_select event
+      /* Parse data */
+      const bstr = evt.target.result;
+      const wb = XLSX.read(bstr, { type: 'binary' });
+
+      /* Get first worksheet */
+      const wsname = wb.SheetNames[0];
+      const ws = wb.Sheets[wsname];
+
+      /* Convert array of arrays */
+      const data = XLSX.utils.sheet_to_csv(ws, { header: 1 });
+
+      /* Update state */
+      console.log(convertToJson(data)); // shows data in json format
+      await wrapData(convertToJson(data)); //upload to mongo
+    };
+    reader.readAsBinaryString(f);
+    await getAllBatches();
+    await getAllCerts();
   };
 
   return (
@@ -213,7 +267,9 @@ const Home = (props) => {
           <div class="box">
             <p class="head-1">{issuer.name}</p>
             {isDeployed ? (
-              <p class="number">{issuer.contractAddress}</p>
+              <a class="number" href={`https://testnet.bscscan.com/address/${issuer.contractAddress}`}>
+                {issuer.contractAddress}
+              </a>
             ) : (
               <button
                 className="acount-btn"
@@ -290,7 +346,7 @@ const Home = (props) => {
         <div class="col-div-4-1">
           <div class="box-1">
             <div class="content-box-1">
-              <p class="head-1">
+              {/* <p class="head-1">
                 Total Sale <span>View All</span>
               </p>
 
@@ -304,6 +360,15 @@ const Home = (props) => {
                   </div>
                   <div class="inside-circle"> 70% </div>
                 </div>
+              </div> */}
+              <div>
+                <input
+                  type="file"
+                  // id="file"
+                  // ref="fileUploader"
+                  onChange={filePathset.bind()}
+                />
+                <button onClick={handleChange}>Read File</button>
               </div>
             </div>
           </div>
@@ -338,7 +403,7 @@ const Home = (props) => {
           <div class="box-8">
             <div class="content-box">
               <p>
-                Top Selling Projects{" "}
+                Top Selling Projects{' '}
                 <span>
                   <button
                     className="acount-btn"
@@ -364,12 +429,14 @@ const Home = (props) => {
                 {selected.map((cert, key) => {
                   return (
                     <tr>
-                      <th>{cert.studentId}</th>
-                      <th>{cert.name}</th>
-                      <th>{cert.dob}</th>
-                      <th>{cert.studyMode}</th>
-                      <th>{cert.classification}</th>
-                      <th>{cert.graduatedYear}</th>
+                      <a href={`http://localhost:3001/cert/${cert.targetHash}`}>
+                        <th>{cert.studentId}</th> <th>{cert.name}</th>
+                        <th>{cert.dob}</th>
+                        <th>{cert.studyMode}</th>
+                        <th>{cert.classification}</th>
+                        <th>{cert.graduatedYear}</th>
+                      </a>
+
                       <th>
                         <label>
                           <input
