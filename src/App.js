@@ -13,6 +13,7 @@ import VerifyPage from "./components/verify";
 import Register from './components/auth/register';
 import Profile from './components/profile';
 import Degree from './components/degree';
+import Sub from './components/sub';
 
 function App() {
   const [wallet, setWallet] = useState('');
@@ -26,6 +27,7 @@ function App() {
           <Route path='/login' element={<Login />} exact/>
           <Route path='/register' element={<Register />} exact/>
           <Route path='/profile' element={<Profile />} exact/>
+          <Route path='/sub' element={<Sub />} exact/>
           <Route path='/degree' element={<Degree />} exact/>
 
         </Routes>
