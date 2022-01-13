@@ -25,8 +25,8 @@ function App() {
           <Route path='/' element={<Landing />}  exact/>
           <Route path='/home' element={<Home wallet={wallet} setWallet={setWallet} />} exact/>
           <Route path='/verify' element={<VerifyPage />} exact/>
-          <Route path='/login' element={<Login />} exact/>
-          <Route path='/register' element={<Register />} exact/>
+          {/* <Route path='/login' element={<Login />} exact/>
+          <Route path='/register' element={<Register />} exact/> */}
           <Route path='/profile' element={<Profile />} exact/>
           <Route path='/degree' element={<Degree />} exact/>
           <Route path='/uploadCerts' element={<ExcelToJson/>} exact/>
