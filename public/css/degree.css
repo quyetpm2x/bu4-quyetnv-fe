@@ -15,7 +15,8 @@
   color: #000;
   font-weight: normal;
   border: 19px dotted #c905c6;
-  border-image-source: url(https://certificate.bcdiploma.com/pub/images/border.b9d04f1.svg);
+  /* border-image-source: url(https://certificate.bcdiploma.com/pub/images/border.b9d04f1.svg); */
+  border-image-source: url(/images/background/border.svg);
   border-image-repeat: space;
   border-image-slice: 27 27 27 27;
   border-image-width: 40px;
@@ -50,7 +51,9 @@
   width: -moz-calc(50% - 10px);
   width: -webkit-calc(50% - 10px);
   width: calc(50% - 10px);
-  background: url(https://certificate.bcdiploma.com/pub/images/bg-1.7d753ed.svg)
+  /* background: url(https://certificate.bcdiploma.com/pub/images/bg-1.7d753ed.svg)
+    no-repeat center center; */
+    background: url(/images/background/degree-bg1.svg)
     no-repeat center center;
   background-size: 150%;
   min-height: -moz-calc(100vh - 120px);
@@ -152,7 +155,9 @@
   width: -moz-calc(50% - 10px);
   width: -webkit-calc(50% - 10px);
   width: calc(50% - 10px);
-  background: url(https://certificate.bcdiploma.com/pub/images/bg-2.d393871.svg)
+  /* background: url(https://certificate.bcdiploma.com/pub/images/bg-2.d393871.svg)
+    no-repeat center center; */
+  background: url(/images/background/degree-bg2.svg)
     no-repeat center center;
   background-size: 150%;
   min-height: -moz-calc(100vh - 120px);
