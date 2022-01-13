@@ -17,3 +17,29 @@ export const formatBatchStatus = (status) => {
         return `Revoke`;
     }
 };
+
+export const removeAccents = (str) => {
+    return str.normalize('NFD')
+              .replace(/[\u0300-\u036f]/g, '')
+              .replace(/đ/g, 'd').replace(/Đ/g, 'D');
+  }
+
+export const formatClassification = (str) => {
+    switch(str) {
+        case 'Exellent':
+          return 'Xuất sắc';
+        case 'Good':
+            return 'Giỏi';
+        case 'Average':
+            return 'Trung bình';
+      }
+}
+
+export const formatStudyMode = (str) => {
+    switch(str) {
+        case 'Fulltime':
+          return 'Chính quy';
+        case 'Partime':
+            return 'Liên thông';
+      }
+}

@@ -1,7 +1,10 @@
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 import React, { useEffect, useState } from 'react';
 import { act } from 'react-dom/cjs/react-dom-test-utils.production.min';
 import { useParams } from 'react-router-dom';
 import { getPublicCert, getIssuer } from './helper/api';
+import { formatClassification, formatStudyMode, removeAccents } from './helper/format';
 
 const Cert = (props) => {
   const params = useParams();
@@ -20,6 +23,19 @@ const Cert = (props) => {
     setData(data.data);
     setIssuer(data.issuer);
   };
+
+  const dowloadPdf = async () => {
+    const input = document.getElementsByClassName('certificat-wrapper certificat-wrapper--front');
+    html2canvas(input)
+      .then((canvas) => {
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF();
+        pdf.addImage(imgData, 'JPEG', 0, 0);
+        // pdf.output('dataurlnewwindow');
+        pdf.save("download.pdf");
+      })
+    ;
+  }
 
   // const getIssuerData = async () => {
   //   const issuer = await getIssuer();
@@ -133,7 +149,7 @@ const Cert = (props) => {
                 <div class="line">
                   <div class="labels">Upon:</div>{" "}
                   <div class="name">
-                    <span>{data.sex === 'Male' ? "Mr" : "Ms"}</span> {data.name}
+                    <span>{data.sex === 'Male' ? "Mr" : "Ms"}</span> {removeAccents(data.name)}
                   </div>
                 </div>{" "}
                 <div class="line">
@@ -187,11 +203,11 @@ const Cert = (props) => {
                 </div>{" "}
                 <div class="line">
                   <div class="labels">Xếp loại tốt nghiệp:</div>{" "}
-                  <div class="details">{data.classification}</div>
+                  <div class="details">{formatClassification(data.classification)}</div>
                 </div>{" "}
                 <div class="line">
                   <div class="labels">Hình thức đào tạo:</div>{" "}
-                  <div class="details">{data.studyMode}</div>
+                  <div class="details">{formatStudyMode(data.studyMode)}</div>
                 </div>
               </div>{" "}
               <div class="date-town">
