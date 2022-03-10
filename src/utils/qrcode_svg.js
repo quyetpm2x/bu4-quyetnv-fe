@@ -4,13 +4,16 @@ const Qrcodetosvg = (data) => {
 
     // render() {
         return (
-        <QrCode
+            <div>
+                <QrCode
         data="google.com"
         height="250"
         width="250"
         fgColor="#000000"
         bgColor="#ffffff"
         />
+            </div>
+        
         );
     // };
 }
