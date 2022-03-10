@@ -75,6 +75,20 @@ class ExcelToJson extends React.Component {
     // return JSON.stringify(result); //JSON
   }
 
+  //rename json object
+  renameJsonObjectAttribute(json, oldAttName, newAttName){
+    json[newAttName]= json[oldAttName];
+    delete json[oldAttName];
+
+  }
+
+  modifyJsonObjName(json, oldName, newName){
+    const arr = JSON.parse(json);
+    arr.forEach( obj => this.renameJsonObjectAttribute( obj, oldName, newName) );
+    const updatedJson = JSON.stringify( arr );
+    console.log ( updatedJson );
+  }
+
   render() {
     return (
       <div>
