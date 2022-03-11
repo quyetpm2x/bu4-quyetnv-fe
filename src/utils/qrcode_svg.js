@@ -2,7 +2,6 @@ import QrCode from 'react-qrcode-svg';
 
 const Qrcodetosvg = (data) => {
 
-    // render() {
         return (
             <div>
                 <QrCode
@@ -15,7 +14,6 @@ const Qrcodetosvg = (data) => {
             </div>
         
         );
-    // };
 }
 
 export default Qrcodetosvg;
